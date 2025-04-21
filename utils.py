@@ -2,7 +2,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def generate_statistics(df):
+def generate_key_statistics(df):
     df['Visit_time'] = pd.to_datetime(df['Visit_time'], errors='coerce')
 
     # 1. Monthly visit trend

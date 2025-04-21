@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 from tkinter.simpledialog import askstring
 from user import authenticate_user
-from utils import generate_statistics
+from utils import generate_key_statistics
 import csv
 from datetime import datetime
 import pandas as pd
@@ -78,7 +78,7 @@ class MainMenu:
         elif self.role.lower() == "admin":
             tk.Button(master, text="Count Visits", width=25, command=self.count_visits).pack(pady=5)
         elif self.role.lower() == "management":
-            tk.Button(master, text="Generate Statistics", width=25, command=self.generate_stats).pack(pady=5)
+            tk.Button(master, text="Generate Key Statistics", width=25, command=self.generate_key_statistics).pack(pady=5)
 
         tk.Button(master, text="Exit", width=25, command=self.exit_program).pack(pady=20)
 
@@ -191,10 +191,10 @@ class MainMenu:
             self.log_action("view_note")
             self.user.note_manager.view_note(date)
 
-    def generate_stats(self):
-        generate_statistics(self.user.patient_manager.df)
-        self.log_action("generate_statistics")
-        messagebox.showinfo("Done", "Statistics generated and saved as images.")
+    def generate_key_statistics(self):
+        generate_key_statistics(self.user.patient_manager.df)
+        self.log_action("generate_key_statistics")
+        messagebox.showinfo("Done", "Key statistics generated and saved as images.")
 
     def exit_program(self):
         self.log_action("exit")
