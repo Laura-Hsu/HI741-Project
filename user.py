@@ -6,7 +6,10 @@ import pandas as pd
 class Admin:
     def __init__(self):
         self.patient_manager = PatientManager()
-        self.note_manager = NoteManager()
+
+class Management:
+    def __init__(self):
+        pass  # Management only uses key statistics (from utils)
 
 class Nurse:
     def __init__(self):
@@ -17,12 +20,7 @@ class Clinician:
     def __init__(self):
         self.patient_manager = PatientManager()
         self.note_manager = NoteManager()
-
-class Management:
-    def __init__(self):
-        self.patient_manager = PatientManager()
-        self.note_manager = NoteManager()
-
+        
 def authenticate_user(username, password):
     df = pd.read_csv("Credentials.csv")
     match = df[(df["username"] == username) & (df["password"] == password)]

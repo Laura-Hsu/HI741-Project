@@ -192,7 +192,8 @@ class MainMenu:
             self.user.note_manager.view_note(date)
 
     def generate_key_statistics(self):
-        generate_key_statistics(self.user.patient_manager.df)
+        df = pd.read_csv("Patient_data.csv")
+        generate_key_statistics(df)
         self.log_action("generate_key_statistics")
         messagebox.showinfo("Done", "Key statistics generated and saved as images.")
 
