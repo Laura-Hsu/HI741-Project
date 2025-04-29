@@ -1,38 +1,40 @@
-
 import pandas as pd
 import matplotlib.pyplot as plt
 
 def generate_key_statistics(df):
     df['Visit_time'] = pd.to_datetime(df['Visit_time'], errors='coerce')
 
-    # 1. Monthly visit trend
-    visits_by_month = df.groupby(df['Visit_time'].dt.to_period("M")).size()
+    # 1. Yearly visit trend
+    visits_by_year = df.groupby(df['Visit_time'].dt.to_period("Y")).size()
 
-    # 2. Monthly visits by insurance
-    insurance_trend = df.groupby([df['Visit_time'].dt.to_period("M"), 'Insurance']).size().unstack(fill_value=0)
+    # 2. Yearly visits by insurance
+    insurance_trend = df.groupby([df['Visit_time'].dt.to_period("Y"), 'Insurance']).size().unstack(fill_value=0)
 
-    # 3. Monthly visits by race
-    race_trend = df.groupby([df['Visit_time'].dt.to_period("M"), 'Race']).size().unstack(fill_value=0)
+    # 3. Yearly visits by race
+    race_trend = df.groupby([df['Visit_time'].dt.to_period("Y"), 'Race']).size().unstack(fill_value=0)
 
-    # 4. Monthly visits by gender
-    gender_trend = df.groupby([df['Visit_time'].dt.to_period("M"), 'Gender']).size().unstack(fill_value=0)
+    # 4. Yearly visits by gender
+    gender_trend = df.groupby([df['Visit_time'].dt.to_period("Y"), 'Gender']).size().unstack(fill_value=0)
 
-    # 5. Monthly visits by ethnicity
-    ethnicity_trend = df.groupby([df['Visit_time'].dt.to_period("M"), 'Ethnicity']).size().unstack(fill_value=0)
+    # 5. Yearly visits by ethnicity
+    ethnicity_trend = df.groupby([df['Visit_time'].dt.to_period("Y"), 'Ethnicity']).size().unstack(fill_value=0)
 
     def plot_trend(trend_df, title, filename):
-        plt.figure(figsize=(10, 6))
-        trend_df.plot(marker='o', ax=plt.gca())
+        plt.figure(figsize=(12, 6))
+        if trend_df.ndim == 1:  # 單一類型
+            trend_df.plot(kind="bar", ax=plt.gca())
+        else:  # 多類型（堆疊bar）
+            trend_df.plot(kind="bar", stacked=True, ax=plt.gca())
         plt.title(title)
-        plt.xlabel("Month")
+        plt.xlabel("Year")
         plt.ylabel("Visit Count")
-        plt.xticks(rotation=45)
+        plt.xticks(rotation=0)
         plt.tight_layout()
         plt.savefig(filename)
         plt.close()
 
-    plot_trend(visits_by_month, "Monthly Visit Trend", "monthly_visits.png")
-    plot_trend(insurance_trend, "Monthly Visits by Insurance Type", "insurance_trend.png")
-    plot_trend(race_trend, "Monthly Visits by Race", "race_trend.png")
-    plot_trend(gender_trend, "Monthly Visits by Gender", "gender_trend.png")
-    plot_trend(ethnicity_trend, "Monthly Visits by Ethnicity", "ethnicity_trend.png")
+    plot_trend(visits_by_year, "Yearly Visit Trend", "yearly_visits.png")
+    plot_trend(insurance_trend, "Yearly Visits by Insurance Type", "insurance_trend.png")
+    plot_trend(race_trend, "Yearly Visits by Race", "race_trend.png")
+    plot_trend(gender_trend, "Yearly Visits by Gender", "gender_trend.png")
+    plot_trend(ethnicity_trend, "Yearly Visits by Ethnicity", "ethnicity_trend.png")
