@@ -12,7 +12,7 @@ class Admin:
 
 class Management:
     def __init__(self):
-        pass  # Management only uses key statistics (from utils)
+        pass
 
 class Nurse:
     def __init__(self):
