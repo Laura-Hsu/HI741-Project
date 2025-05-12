@@ -1,9 +1,13 @@
 import os
 import pandas as pd
 
+DATA_DIR = "data"
+PATIENT_FILE = os.path.join(DATA_DIR, "Patient_data.csv")
+NOTE_FILE = os.path.join(DATA_DIR, "Notes.csv")
+
 class PatientManager:
     def __init__(self):
-        self.df = pd.read_csv(os.path.join("data", "Patient_data.csv"))
+        self.df = pd.read_csv(PATIENT_FILE)
 
     def add_patient_from_gui(self, pid, visit_time, dept, race, gender, ethnicity, age, zipcode, insurance, chief, note_id, note_type, note_text):
         import random
@@ -24,16 +28,17 @@ class PatientManager:
             "Note_type": note_type
         }
         self.df = pd.concat([self.df, pd.DataFrame([new_row])], ignore_index=True)
-        self.df.to_csv("Patient_data.csv", index=False)
+        self.df.to_csv(PATIENT_FILE, index=False)
 
         try:
-            notes_df = pd.read_csv("Notes.csv")
+            notes_df = pd.read_csv(NOTE_FILE)
         except FileNotFoundError:
             notes_df = pd.DataFrame(columns=["Note_ID", "Note_text"])
+
         notes_df["Note_ID"] = notes_df["Note_ID"].astype(str)
         if note_id not in notes_df["Note_ID"].values:
             notes_df = pd.concat([notes_df, pd.DataFrame([{"Note_ID": note_id, "Note_text": note_text}])], ignore_index=True)
-            notes_df.to_csv("Notes.csv", index=False)
+            notes_df.to_csv(NOTE_FILE, index=False)
 
     def count_visits(self, date):
         df = self.df.copy()
@@ -54,10 +59,8 @@ class PatientManager:
                 messagebox.showerror("Error", f"Patient_ID {pid} does not exist.")
                 return
 
-            # 確認要刪除所有與該病患相關的紀錄
             self.df = self.df[self.df["Patient_ID"] != pid]
-            self.df.to_csv("Patient_data.csv", index=False)
-
+            self.df.to_csv(PATIENT_FILE, index=False)
             messagebox.showinfo("Success", f"All records for Patient_ID {pid} have been removed.")
 
     def retrieve_patient(self):
@@ -75,7 +78,6 @@ class PatientManager:
             else:
                 info = result.to_string(index=False)
 
-                # 顯示新視窗
                 result_window = tk.Toplevel()
                 result_window.title(f"Records for Patient_ID {pid}")
                 result_window.geometry("1100x400")
@@ -84,3 +86,4 @@ class PatientManager:
                 text_widget.insert(tk.END, info)
                 text_widget.config(state=tk.DISABLED)
                 text_widget.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)
+
