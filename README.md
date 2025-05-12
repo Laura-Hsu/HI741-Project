@@ -53,7 +53,7 @@ HI741-Project/
 To install required packages, run:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 ---
