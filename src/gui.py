@@ -8,7 +8,9 @@ from datetime import datetime
 import pandas as pd
 import os
 
-USAGE_LOG = "usage_log.csv"
+DATA_DIR = "data"
+PATIENT_FILE = os.path.join(DATA_DIR, "Patient_data.csv")
+USAGE_LOG = os.path.join(DATA_DIR, "usage_log.csv")
 
 class LoginWindow:
     def __init__(self, master):
@@ -31,6 +33,7 @@ class LoginWindow:
         password = self.password_entry.get().strip()
         user_role = authenticate_user(username, password)
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
         from user import Admin, Nurse, Clinician, Management
         if user_role == "admin":
             user = Admin()
@@ -98,12 +101,12 @@ class MainMenu:
                 "Visit_ID": visit_id,
                 "Visit_time": visit_time,
                 "Visit_department": dept_entry.get().strip(),
-                "Race": race_entry.get().strip() if isinstance(race_entry, tk.StringVar) else race_entry.get().strip(),
-                "Gender": gender_entry.get().strip() if isinstance(gender_entry, tk.StringVar) else gender_entry.get().strip(),
-                "Ethnicity": ethnicity_entry.get().strip() if isinstance(ethnicity_entry, tk.StringVar) else ethnicity_entry.get().strip(),
+                "Race": race_entry.get().strip(),
+                "Gender": gender_entry.get().strip(),
+                "Ethnicity": ethnicity_entry.get().strip(),
                 "Age": age_entry.get().strip(),
                 "Zip_code": zip_entry.get().strip(),
-                "Insurance": insurance_entry.get().strip() if isinstance(insurance_entry, tk.StringVar) else insurance_entry.get().strip(),
+                "Insurance": insurance_entry.get().strip(),
                 "Chief_complaint": complaint_entry.get().strip(),
                 "Note_ID": note_id_entry.get().strip(),
                 "Note_type": note_type_entry.get().strip()
@@ -113,57 +116,45 @@ class MainMenu:
                 self.user.patient_manager.df,
                 pd.DataFrame([new_row])
             ], ignore_index=True)
-            self.user.patient_manager.df.to_csv("Patient_data.csv", index=False)
+            self.user.patient_manager.df.to_csv(PATIENT_FILE, index=False)
             messagebox.showinfo("Success", "Patient record added.")
             win.destroy()
 
-        tk.Label(win, text="Patient_ID").pack()
-        pid_entry = tk.Entry(win)
-        pid_entry.pack()
+        # Entry fields
+        fields = [
+            ("Patient_ID", tk.Entry),
+            ("Visit_time (YYYY-MM-DD)", tk.Entry),
+            ("Visit_department", tk.Entry),
+            ("Race", lambda parent: ttk.Combobox(parent, values=["White", "Black", "Asian", "Pacific islanders", "Native Americans", "Unknown"])),
+            ("Gender", lambda parent: ttk.Combobox(parent, values=["Female", "Male", "Non-binary"])),
+            ("Ethnicity", lambda parent: ttk.Combobox(parent, values=["Hispanic", "Non-Hispanic", "Other", "Unknown"])),
+            ("Age", tk.Entry),
+            ("Zip_code", tk.Entry),
+            ("Insurance", lambda parent: ttk.Combobox(parent, values=["Medicare", "Medicaid", "None", "Unknown"])),
+            ("Chief complaint", tk.Entry),
+            ("Note_ID", tk.Entry),
+            ("Note_type", tk.Entry)
+        ]
 
-        tk.Label(win, text="Visit_time (YYYY-MM-DD)").pack()
-        time_entry = tk.Entry(win)
-        time_entry.pack()
+        entries = {}
+        for label_text, widget_class in fields:
+            tk.Label(win, text=label_text).pack()
+            widget = widget_class(win) if callable(widget_class) else widget_class(win)
+            widget.pack()
+            entries[label_text] = widget
 
-        tk.Label(win, text="Visit_department").pack()
-        dept_entry = tk.Entry(win)
-        dept_entry.pack()
-
-        tk.Label(win, text="Race").pack()
-        race_entry = ttk.Combobox(win, values=["White", "Black", "Asian", "Pacific islanders", "Native Americans", "Unknown"])
-        race_entry.pack()
-
-        tk.Label(win, text="Gender").pack()
-        gender_entry = ttk.Combobox(win, values=["Female", "Male", "Non-binary"])
-        gender_entry.pack()
-
-        tk.Label(win, text="Ethnicity").pack()
-        ethnicity_entry = ttk.Combobox(win, values=["Hispanic", "Non-Hispanic", "Other", "Unknown"])
-        ethnicity_entry.pack()
-
-        tk.Label(win, text="Age").pack()
-        age_entry = tk.Entry(win)
-        age_entry.pack()
-
-        tk.Label(win, text="Zip_code").pack()
-        zip_entry = tk.Entry(win)
-        zip_entry.pack()
-
-        tk.Label(win, text="Insurance").pack()
-        insurance_entry = ttk.Combobox(win, values=["Medicare", "Medicaid", "None", "Unknown"])
-        insurance_entry.pack()
-
-        tk.Label(win, text="Chief complaint").pack()
-        complaint_entry = tk.Entry(win)
-        complaint_entry.pack()
-
-        tk.Label(win, text="Note_ID").pack()
-        note_id_entry = tk.Entry(win)
-        note_id_entry.pack()
-
-        tk.Label(win, text="Note_type").pack()
-        note_type_entry = tk.Entry(win)
-        note_type_entry.pack()
+        pid_entry = entries["Patient_ID"]
+        time_entry = entries["Visit_time (YYYY-MM-DD)"]
+        dept_entry = entries["Visit_department"]
+        race_entry = entries["Race"]
+        gender_entry = entries["Gender"]
+        ethnicity_entry = entries["Ethnicity"]
+        age_entry = entries["Age"]
+        zip_entry = entries["Zip_code"]
+        insurance_entry = entries["Insurance"]
+        complaint_entry = entries["Chief complaint"]
+        note_id_entry = entries["Note_ID"]
+        note_type_entry = entries["Note_type"]
 
         tk.Button(win, text="Submit", command=submit).pack(pady=10)
 
@@ -172,7 +163,6 @@ class MainMenu:
         with open(USAGE_LOG, 'a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([self.username, self.role.lower().capitalize(), timestamp, action])
-
 
     def log_and_call(self, action, func):
         self.log_action(action)
@@ -192,16 +182,11 @@ class MainMenu:
             self.user.note_manager.view_note(date)
 
     def generate_key_statistics(self):
-        df = pd.read_csv("Patient_data.csv")
+        df = pd.read_csv(PATIENT_FILE)
         generate_key_statistics(df)
         self.log_action("generate_key_statistics")
-        messagebox.showinfo("Done", "Key statistics generated and saved as images.")
+        messagebox.showinfo("Done", "Key statistics generated and saved to 'data/' folder.")
 
     def exit_program(self):
         self.log_action("exit")
         self.master.quit()
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    LoginWindow(root)
-    root.mainloop()
