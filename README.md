@@ -49,24 +49,22 @@ HI741-Project/
 
 ---
 
-## 🚀 How to Run
-
-1. Make sure you have Python 3.x installed.
-2. Navigate to the `src/` directory and run:
-
-```bash
-cd src
-python main.py
-```
-
----
-
 ## 🔧 Setup Environment
 
 To install required packages, run:
 
 ```bash
 pip install -r requirements.txt
+```
+
+---
+
+## 🚀 How to Run
+
+Make sure you have Python 3.x installed.
+
+```bash
+python src/main.py
 ```
 
 ---
