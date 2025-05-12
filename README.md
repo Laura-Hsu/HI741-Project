@@ -1,6 +1,6 @@
 # HI 741 Final Project – Clinical Data Access System
 
-This is the final project for **HI 741 Spring 2025** by Tzu-Lun Hsu.  
+This is the final project for **HI 741 Spring 2025**.  
 The system provides a role-based clinical data management interface using **Tkinter**, allowing users to retrieve, add, and manage patient records through a GUI.
 
 ---
@@ -112,4 +112,3 @@ uml/uml_diagram.png
 
 Tzu-Lun Hsu  
 University of Wisconsin-Milwaukee  
-HI 741 Spring 2025 Final Project
