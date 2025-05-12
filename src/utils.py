@@ -1,5 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
+
+OUTPUT_DIR = "data" 
 
 def generate_key_statistics(df):
     df['Visit_time'] = pd.to_datetime(df['Visit_time'], errors='coerce')
@@ -21,16 +24,18 @@ def generate_key_statistics(df):
 
     def plot_trend(trend_df, title, filename):
         plt.figure(figsize=(12, 6))
-        if trend_df.ndim == 1:  # 單一類型
+        if trend_df.ndim == 1:
             trend_df.plot(kind="bar", ax=plt.gca())
-        else:  # 多類型（堆疊bar）
+        else:
             trend_df.plot(kind="bar", stacked=True, ax=plt.gca())
+
         plt.title(title)
         plt.xlabel("Year")
         plt.ylabel("Visit Count")
         plt.xticks(rotation=0)
         plt.tight_layout()
-        plt.savefig(filename)
+        output_path = os.path.join(OUTPUT_DIR, filename)
+        plt.savefig(output_path)
         plt.close()
 
     plot_trend(visits_by_year, "Yearly Visit Trend", "yearly_visits.png")
@@ -38,3 +43,4 @@ def generate_key_statistics(df):
     plot_trend(race_trend, "Yearly Visits by Race", "race_trend.png")
     plot_trend(gender_trend, "Yearly Visits by Gender", "gender_trend.png")
     plot_trend(ethnicity_trend, "Yearly Visits by Ethnicity", "ethnicity_trend.png")
+
