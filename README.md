@@ -44,7 +44,7 @@ HI741-Project/
 │   └── ethnicity_trend.png      # Chart: Visits by ethnicity
 │
 ├── uml/
-│   └── uml_diagram.png      # UML class diagram
+│   └── UML.png      # UML class diagram
 ```
 
 ---
