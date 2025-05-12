@@ -21,7 +21,6 @@ The system provides a role-based clinical data management interface using **Tkin
 HI741-Project/
 ├── README.md
 ├── requirements.txt
-├── .gitignore
 │
 ├── src/
 │   ├── main.py              # Entry point
@@ -102,7 +101,7 @@ Also stored in `data/`:
 The UML class diagram is available at:
 
 ```
-uml/uml_diagram.png
+uml/UML.png
 ```
 
 
