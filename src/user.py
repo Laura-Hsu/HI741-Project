@@ -1,4 +1,4 @@
-
+import os
 from patient import PatientManager
 from note import NoteManager
 import pandas as pd
@@ -22,7 +22,7 @@ class Clinician:
         self.note_manager = NoteManager()
         
 def authenticate_user(username, password):
-    df = pd.read_csv("Credentials.csv")
+    df = pd.read_csv(os.path.join("data", "Credentials.csv"))
     match = df[(df["username"] == username) & (df["password"] == password)]
     if not match.empty:
         return match.iloc[0]["role"]
