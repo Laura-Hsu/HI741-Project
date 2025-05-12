@@ -1,9 +1,9 @@
-
+import os
 import pandas as pd
 
 class PatientManager:
     def __init__(self):
-        self.df = pd.read_csv("Patient_data.csv")
+        self.df = pd.read_csv(os.path.join("data", "Patient_data.csv"))
 
     def add_patient_from_gui(self, pid, visit_time, dept, race, gender, ethnicity, age, zipcode, insurance, chief, note_id, note_type, note_text):
         import random
