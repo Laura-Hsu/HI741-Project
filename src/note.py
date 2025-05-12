@@ -1,16 +1,19 @@
 import pandas as pd
 import tkinter as tk
 from tkinter import messagebox
+import os
 
-NOTE_FILE = "Notes.csv"
-PATIENT_FILE = "Patient_data.csv"
+# Define paths to data files in the 'data' directory
+DATA_DIR = "data"
+NOTE_FILE = os.path.join(DATA_DIR, "Notes.csv")
+PATIENT_FILE = os.path.join(DATA_DIR, "Patient_data.csv")
 
 class NoteManager:
     def __init__(self):
         self.notes = pd.read_csv(NOTE_FILE)
         self.notes.columns = self.notes.columns.str.strip()
 
-        # Avoid overwriting critical columns from patient_data
+        # Prevent column name conflicts during merging
         self.notes = self.notes.rename(columns={
             "Patient_ID": "Note_Patient_ID",
             "Visit_ID": "Note_Visit_ID"
@@ -21,7 +24,6 @@ class NoteManager:
 
     def view_note(self, date):
         try:
-            # 將日期標準化
             self.patient_data['Visit_time'] = pd.to_datetime(self.patient_data['Visit_time'], errors='coerce')
             target_date = pd.to_datetime(date)
             matches = self.patient_data[self.patient_data['Visit_time'] == target_date].copy()
@@ -33,10 +35,10 @@ class NoteManager:
             merged = merged.fillna("N/A")
 
             if merged.empty:
-                messagebox.showerror("No Notes", "No notes found for that date.")
+                messagebox.showerror("No Notes", "No notes found for the selected date.")
                 return
 
-            # 建立新視窗顯示內容
+            # Create a new window to display notes
             note_window = tk.Toplevel()
             note_window.title(f"Notes for {date}")
             note_window.geometry("850x500")
@@ -65,4 +67,5 @@ class NoteManager:
             text_widget.config(state=tk.DISABLED)
 
         except Exception as e:
-            messagebox.showerror("Error", f"An error occurred: {str(e)}")
+            messagebox.showerror("Error", f"An error occurred while loading notes: {str(e)}")
+
