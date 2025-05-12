@@ -32,12 +32,16 @@ HI741-Project/
 │   └── utils.py             # Utility functions
 │
 ├── data/
-│   ├── Credentials.csv      # User credentials and roles
-│   ├── Patient_data.csv     # Patient demographic and visit data
-│   ├── Notes.csv            # Clinical notes
-│   ├── usage_log.csv        # Automatically generated usage log
-│   ├── monthly_visits.png   # Chart output (auto-generated)
-│   └── insurance_trend.png  # Chart output (auto-generated)
+│   ├── Credentials.csv          # User credentials and roles
+│   ├── Patient_data.csv         # Patient demographic and visit data
+│   ├── Notes.csv                # Clinical notes
+│   ├── usage_log.csv            # Automatically generated usage log
+│   ├── monthly_visits.png       # Chart: Monthly visit volume
+│   ├── insurance_trend.png      # Chart: Visits by insurance type
+│   ├── yearly_visits.png        # Chart: Total visits per year
+│   ├── race_trend.png           # Chart: Visits by race
+│   ├── gender_trend.png         # Chart: Visits by gender
+│   └── ethnicity_trend.png      # Chart: Visits by ethnicity
 │
 ├── uml/
 │   └── uml_diagram.png      # UML class diagram
@@ -103,7 +107,6 @@ The UML class diagram is available at:
 uml/uml_diagram.png
 ```
 
-It shows class names, attributes, methods, and relationships.
 
 ---
 
